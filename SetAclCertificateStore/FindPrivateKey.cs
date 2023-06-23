@@ -20,7 +20,7 @@ namespace SetAclCertificateStore
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Unable to find private key file name: {ex}", ex.Message);
+                Console.WriteLine($"Unable to find private key file name: {ex.Message}");
                 return null;
             }
             try
@@ -29,7 +29,7 @@ namespace SetAclCertificateStore
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Unable to find private key folder: {ex}", ex.Message);
+                Console.WriteLine($"Unable to find private key folder: {ex.Message}");
                 return null;
             }
             return new FileInfo(Path.Combine(dir, file));
