@@ -22,6 +22,7 @@ namespace SetAclCertificateStore
                 if(store.Certificates.Count > 0)
                 foreach (X509Certificate2 certificate in certificates)
                 {
+                    Console.WriteLine("------------------> Start ACL Process");
                     Console.WriteLine("Subject: " + certificate.Subject);
                     Console.WriteLine("Issuer: " + certificate.Issuer);
                     Console.WriteLine("Thumbprint: " + certificate.Thumbprint);
@@ -32,6 +33,7 @@ namespace SetAclCertificateStore
                     var file = FindPrivateKey.Find(certificate);
 
                     SetAcl(file, fullControl);
+                     Console.WriteLine("--------------> Finish ACL Process");
                 }
                 else
                     Console.WriteLine($"No certificate found in {store.Name}");
@@ -49,8 +51,9 @@ namespace SetAclCertificateStore
             try
             {
                 if (file != null)
-                {
-                    Console.WriteLine("Private key found at {dir}", file.FullName);
+                {                                      
+                    Console.WriteLine($"Private key found at {file.FullName}");
+                                      
                     var fs = new FileSecurity(file.FullName, AccessControlSections.All);
                     foreach (var account in fullControl)
                     {
@@ -58,15 +61,15 @@ namespace SetAclCertificateStore
                         {
                             var principal = new NTAccount(account);
                             fs.AddAccessRule(new FileSystemAccessRule(principal, FileSystemRights.FullControl, AccessControlType.Allow));
-                            Console.WriteLine("Add full control rights for {account}", account);
+                            Console.WriteLine($"Add full control rights for {account}");
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine("Unable to set full control rights for {account}: {ex}", account, ex.Message);
+                            Console.WriteLine($"Unable to set full control rights for {account}: {ex.Message}");
                             Console.WriteLine($"{ex}");
                         }
                     }
-                    file.SetAccessControl(fs);
+                    file.SetAccessControl(fs);                    
                 }
                 else
                 {
